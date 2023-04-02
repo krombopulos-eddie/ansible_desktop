@@ -11,6 +11,7 @@
         - htop
         - tmux
         - neovim
+        - python3-psutil
   - name: copy wallpaper file
     copy:
       src: files/wallpaper.jpg
@@ -29,3 +30,10 @@
     dconf:
       key: "/org/gnome/desktop/background/picture-options"
       value: "'zoom'"
+
+  - name: copy nvim config
+    copy:
+      src: files/init.lua
+      dest: /home/morty/.config/nvim/init.lua
+      owner: morty
+      group: morty 
