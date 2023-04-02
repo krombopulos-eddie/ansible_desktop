@@ -21,7 +21,7 @@
   - name: set wallpaper
     become_user: morty
     dconf:
-      key: "/org/gnome/desktop/background/picture-uri-dark"
+      key: "/org/gnome/desktop/background/picture-uri"
       value: "'file:///usr/share/backgrounds/ansible-wallpaper.jpg'"
 
   - name: set wallpaper position
