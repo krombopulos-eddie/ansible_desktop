@@ -34,6 +34,6 @@
   - name: copy nvim config
     copy:
       src: files/init.lua
-      dest: /home/morty/.config/nvim/init.lua
+      dest: /home/rick/.config/nvim/init.lua
       owner: rick 
       group: rick 
