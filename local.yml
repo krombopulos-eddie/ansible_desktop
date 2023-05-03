@@ -21,13 +21,13 @@
       group: root
 
   - name: set wallpaper
-    become_user: morty
+    become_user: rick 
     dconf:
       key: "/org/gnome/desktop/background/picture-uri"
       value: "'file:///usr/share/backgrounds/ansible-wallpaper.jpg'"
 
   - name: set wallpaper position
-    become_user: morty
+    become_user: rick 
     dconf:
       key: "/org/gnome/desktop/background/picture-options"
       value: "'zoom'"
@@ -35,6 +35,7 @@
   - name: copy nvim config
     copy:
       src: files/init.lua
+<<<<<<< HEAD
       dest: /home/morty/.config/nvim/init.lua
       owner: morty
       group: morty 
@@ -59,3 +60,8 @@
       minute: "*10"
       job: ansible-pull -o -U https://github.com/krombopulos-eddie/ansible_desktop.git
 
+=======
+      dest: /home/rick/.config/nvim/init.lua
+      owner: rick 
+      group: rick 
+>>>>>>> refs/remotes/origin/main
