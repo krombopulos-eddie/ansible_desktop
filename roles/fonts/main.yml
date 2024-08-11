@@ -1,0 +1,6 @@
+---
+- name: Run Ubuntu Tasks
+  ansible.builtin.import_tasks: ubuntu.yml
+  when: ansible_os_family == 'Debian'
+
+# At the time of writing this file isnt really necessary but Will be useful when adding support for different distributions.

@@ -1,0 +1,26 @@
+---
+# This task checks if a distribution specific file exist. Again not necessary for now but will be useful later.
+- name: "Neovim | Checking for Distribution Config: {{ ansible_distribution }}"
+  ansible.builtin.stat: # Module used gather file or DIR status
+    path: "{{ role_path }}/tasks/{{ ansible_distribution }}.yml"  #Uses role_path and ansible_distribution facts to check tasks/Ubuntu.yml
+  register: neovim_distribution_config # The result of this check will be store here to be used later
+
+# If the previous check found a distribution specific file this task includes and runs that files tasks. 
+- name: "Neovim | Run Tasks: {{ ansible_distribution }}" 
+  ansible.builtin.include_tasks: "{{ ansible_distribution }}.yml"
+  when: neovim_distribution_config.stat.exists
+
+# This task creates the Neovim DIR where neovims configs will be stored
+- name: "Neovim | Config folder"
+  ansible.builtin.file:  # This module is used to manage files and DIR
+    mode: "0755"  # Sets the directory permissions to '0755' (read and execute permissions for everyone, write permissions for the owner)
+    path: "{{ ansible_user_dir }}/.config/nvim" # Uses ansible_user_dir fact to specify path to directory which is under users home DIR
+    state: directory # This state ensure that the path exist as a directory
+
+# This task creates a Sym link frome the role's 'files' directory to the neovim cofig directory
+- name: "Neovim | Create symlink to role files directory"
+  ansible.builtin.file:  
+    src: "{{ role_path }}/files"   # source directory 
+    dest: "{{ ansible_user_dir }}/.config/nvim" # destination directory
+    state: link  # This indicates that you want to create a sym link
+    force: true # This ensure that if there is already something a destination path it will be replaced with sysmlink
