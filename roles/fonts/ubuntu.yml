@@ -1,7 +1,0 @@
---- # 3 lines indicates the start of a YAML document
-- name: "Fonts | Install"  # Provides a description of the task
-  ansbible.builtin.apt: # specifies Ansbible module to be used. This module is used to manage debian-based systems using 'Apt'
-    name:   # specifies the package to be installed in this case its fonts-powerline, our font package
-      - fonts-powerline
-    state: present  # This is important, the state parameter determines the desired state of the package. 'Present' means that package should be installed if not already installed.Vice versa
-  become: true # This parameter specifies whether task should be executed with elevated privaleges. In this case its necessary since we are installing packages. 
