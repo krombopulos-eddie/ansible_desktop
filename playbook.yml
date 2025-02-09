@@ -1,0 +1,80 @@
+---
+- name: Configure Linux terminal with Neovim (unstable), Git, Tmux, and Zsh
+  hosts: localhost
+  become: true
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Update system packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Install required packages
+      apt:
+        name:
+          - git
+          - tmux
+          - curl
+          - unzip
+          - ripgrep
+          - python3
+          - python3-pip
+          - zsh
+          - software-properties-common  # Required for adding PPAs
+          - build-essential  # Compilation tools (optional but useful)
+        state: present
+
+    - name: Add Neovim unstable PPA
+      apt_repository:
+        repo: "ppa:neovim-ppa/unstable"
+        state: present
+        update_cache: yes
+
+    - name: Install Neovim (unstable)
+      apt:
+        name: neovim
+        state: latest
+
+    - name: Ensure ~/.config/nvim exists
+      file:
+        path: "{{ kickstart_dest }}"
+        state: directory
+        mode: '0755'
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_id }}"
+
+    - name: Clone Kickstart.nvim
+      git:
+        repo: "{{ kickstart_repo }}"
+        dest: "{{ kickstart_dest }}"
+        force: yes
+
+    - name: Change default shell to Zsh
+      user:
+        name: "{{ ansible_user_id }}"
+        shell: /bin/zsh
+
+    - name: Ensure ~/.zshrc exists
+      file:
+        path: ~/.zshrc
+        state: touch
+        mode: '0644'
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_id }}"
+
+    - name: Set Neovim as the default editor in Zsh
+      lineinfile:
+        path: ~/.zshrc
+        line: 'export EDITOR=nvim'
+        create: yes
+
+    - name: Source ~/.zshrc
+      shell: "source ~/.zshrc"
+      args:
+        executable: /bin/zsh
+
+    - name: Print completion message
+      debug:
+        msg: "Neovim (unstable), Git, Tmux, and Zsh are installed! Restart your shell for changes to take effect."
